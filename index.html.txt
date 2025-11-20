@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday Princee</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#fff0f8;
+      --bg2:#e8f7ff;
+      --accent:#ff2d7a;
+      --accent-2:#ff83c7;
+      --muted:#5a5a5a;
+      --card-radius:28px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%; margin:0; font-family:Poppins,Arial,Helvetica, sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    .stage{
+      min-height:100dvh; /* better for mobile address bar handling */
+      width:100vw;
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden; padding:20px;
+    }
+
+    .glow{position:absolute; border-radius:50%; filter:blur(80px); opacity:0.28; pointer-events:none;}
+    .g1{width:420px;height:420px;background:radial-gradient(circle,#ffd7ef,transparent 40%);left:-80px;top:-60px}
+    .g2{width:520px;height:520px;background:radial-gradient(circle,#d8f3ff,transparent 40%);right:-120px;bottom:-100px}
+
+    .card{
+      width:min(920px,94%);
+      max-width:1100px;
+      height:min(680px,86vh);
+      background:linear-gradient(180deg,rgba(255,255,255,0.92),rgba(255,255,255,0.85));
+      border-radius:var(--card-radius);
+      box-shadow:0 30px 80px rgba(20,20,50,0.12);
+      display:flex; gap:24px; padding:28px; align-items:center; position:relative;
+      overflow:visible;
+    }
+
+    .left{flex:1; display:flex; justify-content:center; align-items:center; transform:translateX(-12px);}
+    .balloon-bunch{width:380px; height:480px; position:relative; pointer-events:none;}
+    .balloon{position:absolute; transform-origin:center bottom; opacity:1; z-index:2; user-select:none}
+
+/* combined float animation to avoid multiple transforms conflict */
+@keyframes float{
+  0%{ transform: translateY(0) translateX(0) rotate(-6deg); }
+  25%{ transform: translateY(-8px) translateX(4px) rotate(-2deg); }
+  50%{ transform: translateY(-20px) translateX(8px) rotate(6deg); }
+  75%{ transform: translateY(-8px) translateX(4px) rotate(2deg); }
+  100%{ transform: translateY(0) translateX(0) rotate(-6deg); }
+}
+
+/* apply different durations and slight delays for natural movement */
+.b1{ left:22%; bottom:32%; width:140px; animation: float 6.2s ease-in-out infinite; animation-delay: -0.6s; }
+.b2{ left:42%; bottom:36%; width:160px; animation: float 5.6s ease-in-out infinite; animation-delay: -1.2s; }
+.b3{ left:62%; bottom:32%; width:130px; animation: float 6.6s ease-in-out infinite; animation-delay: -0.2s; }
+
+.b4{ left:22%; bottom:62%; width:120px; animation: float 6.4s ease-in-out infinite; animation-delay: -0.9s; }
+.b5{ left:42%; bottom:66%; width:140px; animation: float 5.8s ease-in-out infinite; animation-delay: -0.3s; }
+.b6{ left:62%; bottom:62%; width:110px; animation: float 6.9s ease-in-out infinite; animation-delay: -1.5s; }
+
+.b7{ left:22%; bottom:2%; width:120px; animation: float 6.1s ease-in-out infinite; animation-delay: -0.1s; }
+.b8{ left:42%; bottom:6%; width:140px; animation: float 5.7s ease-in-out infinite; animation-delay: -0.8s; }
+.b9{ left:62%; bottom:2%; width:110px; animation: float 6.2s ease-in-out infinite; animation-delay: -0.4s; }
+
+    .premium-balloon{
+      filter: drop-shadow(0 12px 28px rgba(40,18,60,0.14)) saturate(1.05);
+      transform: rotate(-2deg);
+      transition: transform .32s ease;
+      pointer-events:auto;
+    }
+
+    @media (hover:hover){
+      .premium-balloon:hover{ transform: translateY(-6px) rotate(0deg) scale(1.02); }
+    }
+
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .balloon, .premium-balloon { animation: none !important; transition: none !important; }
+    }
+
+    .right{flex:1; padding:16px; display:flex; flex-direction:column;}
+    .badge{
+      font-family:Merienda; color:var(--accent);
+      background:rgba(255,45,122,0.08); padding:8px 14px; border-radius:18px;
+      display:inline-block;
+    }
+
+    h1{
+      font-family:Merienda; font-size:3.1rem; color:var(--accent-2); margin:16px 0 6px;
+    }
+
+    .subtitle{font-size:1.05rem; color:var(--muted); margin-bottom:18px;}
+
+    .action-row{ display:flex; gap:20px; align-items:flex-start; }
+
+    .cute-click{ margin-top:6px; text-align:center; font-size:0.9rem; color:var(--accent); font-weight:700; }
+
+    .btn{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:white; padding:12px 18px;
+      border-radius:24px; border:2px solid var(--accent-2);
+      font-weight:600; cursor:pointer;
+      box-shadow:0 0 14px rgba(255,130,180,0.45);
+      transition:.25s ease; display:inline-flex; align-items:center; justify-content:center;
+    }
+
+    .btn.secondary{
+      background:transparent; color:var(--accent-2); border:2px solid var(--accent-2);
+    }
+
+    .btn:focus{ outline:3px solid rgba(255,45,122,0.12); outline-offset:3px; }
+
+    #confettiCanvas{
+      position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; z-index:4;
+    }
+
+    .popup-title{ font-size:18px; font-weight:700; margin-bottom:10px; }
+    .popup-img{ width:100%; max-height:260px; object-fit:contain; border-radius:12px; margin-bottom:10px; }
+    .popup-list p{ margin:10px 0; font-size:15px; color:var(--muted); }
+
+    footer{ position:fixed; bottom:10px; width:100%; text-align:center; color:var(--muted); font-size:0.9rem; z-index:999; pointer-events:none; }
+  </style>
+</head>
+
+<body>
+
+<!-- IMPORTANT: Replace 'assets/happy-birthday.mp3' with a public URL or host the file on your site (GitHub Pages/Netlify/etc).
+     Local paths like /mnt/data/... won't work when you publish the HTML. -->
+<audio id="bgSong" src="assets/happy-birthday.mp3" preload="none"></audio>
+
+  <div class="stage">
+    <div class="glow g1" aria-hidden="true"></div>
+    <div class="glow g2" aria-hidden="true"></div>
+
+    <main class="card" role="main" aria-labelledby="titleCard">
+
+      <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+      <div class="left" aria-hidden="false">
+        <div class="balloon-bunch" aria-hidden="true">
+
+          <img class="balloon b1 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloons cluster" loading="lazy">
+          <img class="balloon b2 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloons cluster" loading="lazy">
+          <img class="balloon b3 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+
+          <img class="balloon b4 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+          <img class="balloon b5 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+          <img class="balloon b6 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+
+          <img class="balloon b7 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+          <img class="balloon b8 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+          <img class="balloon b9 premium-balloon" src="https://i.ibb.co/Sw47j7k4/pngtree-pink-ballons-png-image-15802315.png" alt="Pink balloon" loading="lazy">
+
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="badge">For Princess</div>
+
+        <h1 id="titleCard">Happy Birthday <span style="color:var(--accent)">Princee</span> 🎀</h1>
+
+        <div class="subtitle">May your day sparkle with smiles, hugs and sweet surprises ✨</div>
+
+        <div class="action-row" role="toolbar" aria-label="Celebration controls">
+
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <button class="btn secondary" id="confettiBtn" aria-label="Celebrate with confetti and music">Celebrate 🎀</button>
+            <div class="cute-click">Click ↑</div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <button class="btn secondary" id="msgBtn" aria-label="Open memory message">Memory 🎀</button>
+            <div class="cute-click">Click ↑</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+<footer>from Dhananjay to Chhipakalee</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, confetti = [], animationId = null;
+  const MAX_CONFETTI = 600; // total cap
+  const SMALL_SCREEN_CAP = 120;
+
+  function resizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.height + "px";
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    W = rect.width; H = rect.height;
+  }
+
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+
+  function spawnConfetti(count = 280){
+    // do not exceed MAX_CONFETTI
+    const allowable = Math.max(0, MAX_CONFETTI - confetti.length);
+    if (allowable <= 0) return;
+    let desired = Math.min(count, allowable);
+    const colors=['#ff2d7a','#fff176','#8bc34a','#00bcd4','#ff8bcf'];
+    const limit = Math.min(desired, window.innerWidth < 480 ? SMALL_SCREEN_CAP : desired);
+    for(let i=0;i<limit;i++){
+      confetti.push({
+        x: rand(0,W), y: rand(-H,0), s: rand(6,12),
+        vx: rand(-1.5,1.5), vy: rand(2,6),
+        c: colors[Math.floor(rand(0,colors.length))],
+        rot: rand(0,360), vr: rand(-0.1,0.1)
+      });
+    }
+    if(!animationId) animate();
+  }
+
+  function drawConfetti(){
+    ctx.clearRect(0,0,W,H);
+    for (let i = confetti.length - 1; i >= 0; i--){
+      const p = confetti[i];
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x + p.s/2, p.y + (p.s*0.3));
+      ctx.rotate((p.rot * Math.PI)/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s/2, -p.s*0.3, p.s, p.s*0.6);
+      ctx.restore();
+    }
+    // remove offscreen
+    confetti = confetti.filter(p => p.y < H + 40);
+    if (confetti.length === 0){
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  }
+
+  function animate(){
+    animationId = requestAnimationFrame(animate);
+    drawConfetti();
+  }
+
+  /* MEMORY popup */
+  function showMemoryPopup(){
+    if(document.getElementById('memoryPopupOverlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'memoryPopupOverlay';
+    overlay.style.position = 'fixed';
+    overlay.style.left = 0; overlay.style.top = 0; overlay.style.right = 0; overlay.style.bottom = 0;
+    overlay.style.background = 'rgba(0,0,0,0.45)';
+    overlay.style.display = 'flex'; overlay.style.alignItems = 'center'; overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = 99999;
+
+    const box = document.createElement('div');
+    box.setAttribute('role','dialog');
+    box.setAttribute('aria-modal','true');
+    box.style.width = 'min(500px,90%)';
+    box.style.background = 'linear-gradient(180deg,#fff,#fffaf7)';
+    box.style.borderRadius = '20px';
+    box.style.padding = '20px 22px';
+    box.style.boxShadow = '0 20px 60px rgba(0,0,0,0.2)';
+    box.style.textAlign = 'left';
+
+    const title = document.createElement('div');
+    title.className = 'popup-title';
+    title.textContent = 'Happy Birthday My Dear Princess 🎀🎂';
+
+    const img = document.createElement('img');
+    img.className = 'popup-img';
+    // If you want to use a different image, replace this URL or host it with your site.
+    img.src = 'https://i.ibb.co/ZRybyWQ5/IMG-20251120-000301.jpg';
+    img.alt = 'Princee photo';
+    img.loading = 'lazy';
+
+    const note = document.createElement('p');
+    note.textContent = 'Chhipakalee 😃 Just kidding 😃';
+
+    const close = document.createElement('button');
+    close.textContent = 'Close';
+    close.style.marginTop = '12px';
+    close.style.padding = '10px 14px';
+    close.style.borderRadius = '12px';
+    close.style.border = '0';
+    close.style.background = 'linear-gradient(90deg,#ff2d7a,#ff83c7)';
+    close.style.color = 'white';
+    close.style.fontWeight = '700';
+    close.style.cursor = 'pointer';
+    close.onclick = () => overlay.remove();
+    close.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { overlay.remove(); } };
+
+    box.appendChild(title);
+    box.appendChild(img);
+    box.appendChild(note);
+    box.appendChild(close);
+    overlay.appendChild(box);
+
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    document.body.appendChild(overlay);
+    close.focus();
+  }
+
+  function attachHandlers(){
+    const confettiBtn = document.getElementById('confettiBtn');
+    const msgBtn = document.getElementById('msgBtn');
+    const song = document.getElementById('bgSong');
+
+    confettiBtn.addEventListener('click', () => {
+      spawnConfetti(280);
+      if (song){
+        try {
+          // set a reasonable starting volume
+          song.volume = 0.8;
+          // play, but ignore promise rejection when autoplay blocked — user gesture clicked so usually succeeds
+          song.play().catch(()=>{ /* silence */ });
+        } catch(e){}
+      }
+    });
+
+    // keyboard accessibility (Enter/Space) already native on <button>, but ensure message button opens popup when activated by keyboard
+    msgBtn.addEventListener('click', showMemoryPopup);
+
+    // window resizing
+    window.addEventListener('resize', () => setTimeout(resizeCanvas, 80));
+  }
+
+  // init
+  window.addEventListener('load', () => { resizeCanvas(); attachHandlers(); });
+})();
+</script>
+
+</body>
+</html>
